@@ -1,9 +1,12 @@
 Image Analysis with OpenCV in Python
 ======
-* This project contains Jupyter notebooks demonstrating a diverse set of image analysis methods, including python code for scaling, blurring, contour detection, edge detection, masking, visualizing histograms, face detection and face recognition
-* The notebooks loosely follow an OpenCV Course made available through freeCodeCamp.org by Jason Dsouza ([available here](https://www.youtube.com/watch?v=oXlwWbU8l2o)). There are currently two notebooks available:
+This project contains Jupyter notebooks demonstrating a diverse set of image analysis methods in OpenCV, including python code for scaling, blurring, contour detection, edge detection, masking, visualizing histograms, face detection and face recognition. The notebooks generally follow the freeCodeCamp.org course entitled "OpenCV & Python" by Jason Dsouza ([video link](https://www.youtube.com/watch?v=oXlwWbU8l2o)). 
+
+There are currently two notebooks available:
   * opencv_basics_advanced.ipynb: This notebook covers Basic and Advanced image manipulation techniques, including scaling, blurring, contour detection, edge detection, masking, and visualizing histograms. Download example images of the Sun with the link provided to follow along.
-  * opencv_faces.ipynb: This notebook focuses on face detection using Haar Cascades and OpenCV's built-in face recognition functionality. Download example images from the Labelled Faces in the Wild (LFW) dataset (via Kaggle) to follow along.
+  * opencv_faces.ipynb: This notebook focuses on Face Detection using Haar Cascades and OpenCV's built-in face recognition functionality. Download example images from the Labelled Faces in the Wild (LFW) dataset (via Kaggle) to follow along.
+
+Use these image analysis notebooks as a learning tool, a quick OpenCV reference, or modify them into templates to quickly test different feature extraction methods for new, image-based projects.
 
 ## Usage
 1. Clone this repo (or a fork of it)
