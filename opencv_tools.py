@@ -283,4 +283,4 @@ def draw_detected_objects(detected_frame, detected_rect, frame_to_show=None, pri
 
 ## 2. If run from command line, execute script below here
 if __name__ == "__main__":
-    
+    print("ToDo: Implement example that runs as a script!")
