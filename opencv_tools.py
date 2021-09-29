@@ -1,18 +1,16 @@
 #!/usr/bin/env python3
-# Code name: data_analysis_tools.py
-# Brief description: Provides a set of data analysis tools for use on an input
-# numpy array
+# Code name: opencv_tools.py
+# Brief description: Provides a set of image analysis tools mostly derived from OpenCV
+# that can be applied to an input image (i.e. numpy array)
 #
-# Requirements: Python (3.4+?)
-# numpy ()
-# matplotlib ()
+# Requirements: Python (3.5+?), plus the packages listed below
 #
-# Start Date: 2/8/18
+# Start Date: 9/28/21
 # Last Revision:
 # Current Version:
 # Notes:
 #
-# Copyright (C) 2017, Frederick D. Pearce, data_analysis_tools.py
+# Copyright (C) 2021, Frederick D. Pearce, opencv_tools.py
 
 # 0. Import modules
 import cv2 as cv
@@ -23,7 +21,7 @@ import random
 
 ## 1. Define functions
 # 1.1 Frame manipulation and display functions
-# ToDo: Change these to methods of new class
+# ToDo: Change these to methods of new class so they can be imported together
 def load_frame_gray(img_path, gray_flag=False):
     """Load image at img_path, and convert the original image to grayscale if gray_flag=True.
     Return image and grayscale image if gray_flag=True; otherwise only return original image.
@@ -82,7 +80,7 @@ def show_frame(frame, frame_title):
     cv.waitKey(0)
     cv.destroyAllWindows()
     
-# Histogram-related functions
+# 1.2 Histogram-related functions
 def get_hist_params(hist_params, plot_params=None):
     """Return a dictionary containing parameters for calculating and plotting histograms using OpenCV. This
     function defines default parameter values, then updates them based on user input to the function, and finally
@@ -142,7 +140,7 @@ def plot_frame_histogram(hist_params, plot_params=None):
     create_figure_axis(**params['plot'])
     calc_plot_histogram(**params)
     
-# Edge detection functions
+# 1.3 Edge detection functions
 def edges_canny_auto(frame, median_ratio=0.33):
     """Automatic Canny edge detection following https://www.pyimagesearch.com/2015/04/06/zero-parameter-automatic-canny-edge-detection-with-python-and-opencv/"""
     m = np.median(frame)
@@ -150,7 +148,7 @@ def edges_canny_auto(frame, median_ratio=0.33):
     h = int(min(255, (1.0-median_ratio)*m))
     return cv.Canny(frame, l, h)
 
-# Object detection functions
+# 1.4 Object detection functions
 def detect_all_objects(gray, haar_file, params, verbose=False):
     """Return objects detected in input grayscale image, gray, using the haar cascade detector specified in haar_file,
     with the input parameters to the detectMultiScale method  specified in params.
@@ -282,3 +280,7 @@ def draw_detected_objects(detected_frame, detected_rect, frame_to_show=None, pri
         if isinstance(frame_to_show, np.ndarray):
             show_frame(frame_to_show[y:y+h, x:x+w], "Objects Detected in Image")
     return detected_frame
+
+## 2. If run from command line, execute script below here
+if __name__ == "__main__":
+    
