@@ -239,7 +239,7 @@ def get_detected_features_labels(img, detected_rects, label=-1, verbose=False):
     else:
         return obj_rois
 
-def detect_image_objects(gray, detect_params, detect_type="all", label=-1, verbose=False):
+def detect_image_objects(gray, detect_params, detect_type="all", detect_output=False, label=-1, verbose=False):
     """Detect object(s) in the image located at img_path, using the haar object defined in
     the xml file located at haar_path where
     gray = a grayscale image as an numpy array of type uint8
@@ -263,9 +263,14 @@ def detect_image_objects(gray, detect_params, detect_type="all", label=-1, verbo
     else:
         print(f"Unrecongized input value for detect_type, {detect_type}, so no objects were detected!")
         print("Please provide a string value for detect_type of either 1) 'all' or 2) 'primary'")
-        detected_rects = None
-    if isinstance(detected_rects, np.ndarray):
+        detected_rects = []
+    if len(detected_rects) > 0:
         features_labels = get_detected_features_labels(gray, detected_rects, label=label, verbose=verbose)
+    else:
+        features_labels = ([], []) if label > -1 else []
+    if detect_output:
+        return (features_labels, detected_rects)
+    else:
         return features_labels
     
 def draw_detected_objects(detected_frame, detected_rect, frame_to_show=None, print_detected=False, rect_color=(255, 255, 255), rect_thickness=2):
