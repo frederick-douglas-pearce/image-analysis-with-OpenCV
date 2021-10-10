@@ -149,18 +149,18 @@ def edges_canny_auto(frame, median_ratio=0.33):
     return cv.Canny(frame, l, h)
 
 # 1.4 Object detection functions
-def detect_all_objects(gray, haar_file, params, verbose=False):
+def detect_all_objects(gray, haar_file, params, object_type="", verbose=False):
     """Return objects detected in input grayscale image, gray, using the haar cascade detector specified in haar_file,
-    with the input parameters to the detectMultiScale method  specified in params.
+    with the input parameters to the   specified in params.
     """
     # Not the most performant to load haar_cascade for each image when params aren't changing...
     haar_cascade = cv.CascadeClassifier(haar_file)
     detected_objects = haar_cascade.detectMultiScale(gray, **params)
     if verbose:
-        print(f"# of Objects Detected = {len(detected_objects)}")
+        print(f"# of {object_type.capitalize()+' ' if object_type else ''}Objects Detected = {len(detected_objects)}")
     return detected_objects
 
-def detect_primary_objects(gray, haar_file, params, num_primary_obj=1, max_iter=10, boost_flag=True, verbose=False):
+def detect_primary_objects(gray, haar_file, params, num_primary_obj=1, max_iter=10, boost_flag=True, object_type="", verbose=False):
     """Identify the "primary", or least likely to be a false positive, object detected within the input grayscale image, gray.
     The type of object detected by haar_cascade is determined by the haar cascade class xml file that was provided in 
     the haar_file parameter.
@@ -170,7 +170,7 @@ def detect_primary_objects(gray, haar_file, params, num_primary_obj=1, max_iter=
     num_detected = len(detected_objects)
     num_detected_prev = num_detected
     if verbose:
-        print(f"Initial # of Objects Detected = {num_detected}")
+        print(f"\nInitial # of {object_type.capitalize()+' ' if object_type else ''}Objects Detected = {num_detected}")
     num_iter = 0
     boost_factor = 1
     while num_detected != num_primary_obj and num_iter != max_iter:
@@ -205,8 +205,15 @@ def detect_primary_objects(gray, haar_file, params, num_primary_obj=1, max_iter=
             boost_factor = 1
         num_detected_prev = num_detected
     if verbose:
-        print(f"Final # of Objects Detected = {num_detected}")
+        print(f"Final # of {object_type.capitalize()+' ' if object_type else ''}Objects Detected = {num_detected}")
     return detected_objects
+
+def get_detected_objects(gray, detector_params, objects_to_detect=['face'], detector_func=detect_all_objects, verbose=False):
+    """High-level function for detecting different types of objects within an input grayscale image, gray."""
+    detected_rects = {}
+    for object_type in objects_to_detect:
+        detected_rects[object_type] = detector_func(gray, object_type=object_type, verbose=verbose, **detector_params[object_type])
+    return detected_rects
 
 def get_detected_features_labels(img, detected_rects, label=-1, verbose=False):
     """Loop through each detected rectangle in the input list, detected_rects, and extract the region of interest (ROI)
@@ -232,7 +239,7 @@ def get_detected_features_labels(img, detected_rects, label=-1, verbose=False):
     else:
         return obj_rois
 
-def detect_image_objects(gray, detect_params, detect_type="all", label=-1, verbose=False):
+def detect_image_objects(gray, detect_params, detect_type="all", detect_output=False, label=-1, verbose=False):
     """Detect object(s) in the image located at img_path, using the haar object defined in
     the xml file located at haar_path where
     gray = a grayscale image as an numpy array of type uint8
@@ -256,9 +263,14 @@ def detect_image_objects(gray, detect_params, detect_type="all", label=-1, verbo
     else:
         print(f"Unrecongized input value for detect_type, {detect_type}, so no objects were detected!")
         print("Please provide a string value for detect_type of either 1) 'all' or 2) 'primary'")
-        detected_rects = None
-    if isinstance(detected_rects, np.ndarray):
+        detected_rects = []
+    if len(detected_rects) > 0:
         features_labels = get_detected_features_labels(gray, detected_rects, label=label, verbose=verbose)
+    else:
+        features_labels = ([], []) if label > -1 else []
+    if detect_output:
+        return (features_labels, detected_rects)
+    else:
         return features_labels
     
 def draw_detected_objects(detected_frame, detected_rect, frame_to_show=None, print_detected=False, rect_color=(255, 255, 255), rect_thickness=2):
